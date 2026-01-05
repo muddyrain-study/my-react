@@ -8,5 +8,5 @@ module.exports = {
   },
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   collectCoverage: true,
-  coverageDirectory: 'coverage',  
+  coverageDirectory: 'coverage',
 };

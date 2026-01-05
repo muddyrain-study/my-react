@@ -1,6 +1,6 @@
-import { add } from ".";
+import { add } from '.';
 
-function test (){
-  console.log(add(2,3));
+function test() {
+  console.log(add(2, 3));
 }
 test();

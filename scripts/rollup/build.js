@@ -1,6 +1,6 @@
 const typescript = require('@rollup/plugin-typescript');
 const { babel } = require('@rollup/plugin-babel');
-const path = require('path');
+const path = require('node:path');
 const rollup = require('rollup');
 
 const packages = [
@@ -18,9 +18,9 @@ const packages = [
 ];
 
 async function build() {
-  for (const package of packages) {
+  for (const pkg of packages) {
     const config = {
-      input: package.input,
+      input: pkg.input,
       plugins: [
         babel({
           presets: ['@babel/preset-env'],
@@ -29,13 +29,13 @@ async function build() {
           tsconfig: path.resolve(__dirname, '../../tsconfig.json'),
           exclude: ['**/__tests__/**', '**/*.test.ts'],
           declaration: true,
-          declarationDir: path.dirname(package.output[0].file),
+          declarationDir: path.dirname(pkg.output[0].file),
         }),
       ],
     };
     const bundle = await rollup.rollup(config);
 
-    for (const output of package.output) {
+    for (const output of pkg.output) {
       await bundle.write(output);
     }
   }
