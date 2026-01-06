@@ -2,16 +2,33 @@ const typescript = require('@rollup/plugin-typescript');
 const { babel } = require('@rollup/plugin-babel');
 const path = require('node:path');
 const rollup = require('rollup');
+const { existsSync, mkdirSync, writeFileSync } = require('node:fs');
 
 const packages = [
   {
-    name: 'test',
-    input: 'packages/test/index.ts',
+    name: 'react',
+    input: path.resolve(__dirname, '../../packages/react/index.ts'),
     output: [
       {
-        file: 'packages/test/dist/index.js',
+        file: path.resolve(__dirname, '../../dist/react/index.js'),
         format: 'umd',
-        name: 'Test',
+        name: 'react',
+      },
+    ],
+  },
+  {
+    name: 'jsx-runtime',
+    input: path.resolve(__dirname, '../../packages/react/jsx-runtime.ts'),
+    output: [
+      {
+        file: path.resolve(__dirname, '../../dist/react/jsx-runtime.js'),
+        format: 'umd',
+        name: 'jsx-runtime',
+      },
+      {
+        file: path.resolve(__dirname, '../../dist/react/jsx-dev-runtime.js'),
+        format: 'umd',
+        name: 'jsx-dev-runtime',
       },
     ],
   },
@@ -28,8 +45,6 @@ async function build() {
         typescript({
           tsconfig: path.resolve(__dirname, '../../tsconfig.json'),
           exclude: ['**/__tests__/**', '**/*.test.ts'],
-          declaration: true,
-          declarationDir: path.dirname(pkg.output[0].file),
         }),
       ],
     };
@@ -39,6 +54,16 @@ async function build() {
       await bundle.write(output);
     }
   }
+  const packageJson = {
+    name: 'react',
+    version: '1.0.0',
+    main: 'index.js',
+  };
+  const reactDir = path.resolve(__dirname, '../../dist/react');
+  if (!existsSync(reactDir)) {
+    mkdirSync(reactDir, { recursive: true });
+  }
+  writeFileSync(path.join(reactDir, 'package.json'), JSON.stringify(packageJson, null, 2), 'utf-8');
 }
 
 build();
