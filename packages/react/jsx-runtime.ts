@@ -1,10 +1,9 @@
-import type { ReactElementType } from 'shared/ReactElementType';
-
-export const symbolName = 'react.element';
+import type { ReactElement as ReactElementType } from 'shared/ReactElementType';
+import { REACT_ELEMENT_TYPE } from 'shared/ReactSymbols';
 
 function ReactElement(type: any, props: any, key: any, ref: any): ReactElementType {
   return {
-    $$typeof: typeof Symbol === 'function' && Symbol.for ? Symbol.for(symbolName) : symbolName,
+    $$typeof: REACT_ELEMENT_TYPE,
     type,
     props,
     key,

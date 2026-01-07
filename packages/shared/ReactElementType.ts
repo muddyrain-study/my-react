@@ -1,4 +1,4 @@
-export type ReactElementType = {
+export type ReactElement = {
   $$typeof: any;
   type: any;
   props: any;
