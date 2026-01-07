@@ -1,6 +1,6 @@
 import type { ReactElementType } from 'shared/ReactElementType';
 
-const symbolName = 'react.element';
+export const symbolName = 'react.element';
 
 function ReactElement(type: any, props: any, key: any, ref: any): ReactElementType {
   return {
