@@ -1,6 +1,6 @@
 import type { ReactElement } from 'shared/ReactElementType';
 import type { Fiber, WorkTag } from './ReactInternalTypes';
-import { HostComponent } from './ReactInternalTypes';
+import { HostComponent, HostText } from './ReactInternalTypes';
 
 export function createFiber(tag: WorkTag, key: string | null): Fiber {
   const fiber: Fiber = {
@@ -35,5 +35,12 @@ export function createFiberFromTypeAndProps(
 export function createFiberFromElement(element: ReactElement): Fiber {
   const { type, key, props } = element;
   const fiber = createFiberFromTypeAndProps(type, props, key);
+  return fiber;
+}
+
+// 创建文本Fiber节点
+export function createFiberFromText(text: string | number): Fiber {
+  const fiber = createFiber(HostText, null);
+  fiber.pendingProps = text;
   return fiber;
 }
