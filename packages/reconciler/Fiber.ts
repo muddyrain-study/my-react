@@ -17,7 +17,13 @@ export function createFiber(tag: WorkTag, key: string | null): Fiber {
   };
   return fiber;
 }
-
+/**
+ * 创建Fiber节点
+ * @param type 节点类型
+ * @param pendingProps 节点属性
+ * @param key 节点key
+ * @returns Fiber节点
+ */
 export function createFiberFromTypeAndProps(
   type: any,
   pendingProps: any,
@@ -31,14 +37,22 @@ export function createFiberFromTypeAndProps(
   return fiber;
 }
 
-// 从ReactElement转成Fiber
+/**
+ * 创建元素Fiber节点
+ * @param element React元素
+ * @returns Fiber节点
+ */
 export function createFiberFromElement(element: ReactElement): Fiber {
   const { type, key, props } = element;
   const fiber = createFiberFromTypeAndProps(type, props, key);
   return fiber;
 }
 
-// 创建文本Fiber节点
+/**
+ * 创建文本Fiber节点
+ * @param text 文本内容
+ * @returns Fiber节点
+ */
 export function createFiberFromText(text: string | number): Fiber {
   const fiber = createFiber(HostText, null);
   fiber.pendingProps = text;
