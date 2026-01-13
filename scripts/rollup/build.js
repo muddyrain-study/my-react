@@ -15,6 +15,11 @@ const packages = [
         name: 'react',
       },
     ],
+    packageJson: {
+      name: 'react',
+      version: '1.0.0',
+      main: 'index.js',
+    },
   },
   {
     name: 'jsx-runtime',
@@ -31,6 +36,22 @@ const packages = [
         name: 'jsx-dev-runtime',
       },
     ],
+  },
+  {
+    name: 'react-dom',
+    input: path.resolve(__dirname, '../../packages/react-dom/client.ts'),
+    output: [
+      {
+        file: path.resolve(__dirname, '../../dist/react-dom/client.js'),
+        format: 'umd',
+        name: 'react-dom',
+      },
+    ],
+    packageJson: {
+      name: 'react-dom',
+      version: '1.0.0',
+      main: 'client.js',
+    },
   },
 ];
 
@@ -53,17 +74,19 @@ async function build() {
     for (const output of pkg.output) {
       await bundle.write(output);
     }
+
+    if (pkg.packageJson) {
+      const packageDir = path.resolve(__dirname, `../../dist/${pkg.name}`);
+      if (!existsSync(packageDir)) {
+        mkdirSync(packageDir, { recursive: true });
+      }
+      writeFileSync(
+        path.join(packageDir, 'package.json'),
+        JSON.stringify(pkg.packageJson, null, 2),
+        'utf-8'
+      );
+    }
   }
-  const packageJson = {
-    name: 'react',
-    version: '1.0.0',
-    main: 'index.js',
-  };
-  const reactDir = path.resolve(__dirname, '../../dist/react');
-  if (!existsSync(reactDir)) {
-    mkdirSync(reactDir, { recursive: true });
-  }
-  writeFileSync(path.join(reactDir, 'package.json'), JSON.stringify(packageJson, null, 2), 'utf-8');
 }
 
 build();
