@@ -1,5 +1,5 @@
 import { reconcileChildFibers } from './ChildFiber';
-import { type Fiber, HostText } from './ReactInternalTypes';
+import { type Fiber, FunctionComponent, HostComponent, HostText } from './ReactInternalTypes';
 
 /**
  * 开始工作，根据不同情况，调用不同的协调方法
@@ -12,10 +12,19 @@ export function beginWork(fiber: Fiber): Fiber | null {
   if (typeof children === 'string' || typeof children === 'number') {
     return null;
   }
-  if (fiber.tag === HostText) {
-    return null;
+  switch (fiber.tag) {
+    case HostText:
+      return null;
+    case FunctionComponent: {
+      const children = fiber.type();
+      fiber.child = reconcileChildFibers(fiber, children);
+      return fiber.child;
+    }
+    case HostComponent:
+      fiber.child = reconcileChildFibers(fiber, children);
+      return fiber.child;
+
+    default:
+      return null;
   }
-  // 1. 创建子节点
-  fiber.child = reconcileChildFibers(fiber, children);
-  return fiber.child;
 }

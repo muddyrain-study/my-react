@@ -1,4 +1,5 @@
-export type WorkTag = 3 | 5 | 6;
+export type WorkTag = 0 | 3 | 5 | 6;
+export const FunctionComponent = 0;
 export const HostRoot = 3;
 export const HostComponent = 5;
 export const HostText = 6;
