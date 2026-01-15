@@ -19,4 +19,5 @@ export type Fiber = {
   sibling: Fiber | null;
   ref: any;
   pendingProps: any;
+  memoizedState: any;
 };

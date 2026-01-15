@@ -15,7 +15,7 @@ function reconcileChildrenArray(returnFiber: Fiber, children: any[]): Fiber | nu
   let previousNewFiber: Fiber | null = null;
   for (let i = 0; i < children.length; i++) {
     const newFiber =
-      typeof children[i] === 'string'
+      typeof children[i] === 'string' || typeof children[i] === 'number'
         ? createFiberFromText(children[i])
         : createFiberFromElement(children[i]);
     newFiber.return = returnFiber;

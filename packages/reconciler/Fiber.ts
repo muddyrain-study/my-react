@@ -14,6 +14,7 @@ export function createFiber(tag: WorkTag, key: string | null): Fiber {
     sibling: null,
     ref: null,
     pendingProps: null,
+    memoizedState: null,
   };
   return fiber;
 }

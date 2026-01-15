@@ -1,6 +1,6 @@
 import { beginWork } from '../BeginWork';
 import { createFiberFromElement } from '../Fiber';
-import { MULTIPLE_ELEMENTS, SINGLE_ELEMENT } from './data';
+import { MULTIPLE_ELEMENTS, SINGLE_ELEMENT, SINGLE_NUMBER_ELEMENT } from './data';
 
 describe('BeginWork 测试', () => {
   test('单节点测试', () => {
@@ -11,6 +11,19 @@ describe('BeginWork 测试', () => {
     expect(root_fiber.pendingProps).not.toBeNull();
     expect(child_fiber?.pendingProps).not.toBeNull();
     expect(child_fiber?.pendingProps).toEqual({ children: 'hello' });
+
+    expect(child_fiber?.return).toBe(root_fiber);
+    expect(root_fiber.child).toBe(child_fiber);
+  });
+
+  test('单数字节点测试', () => {
+    const root_fiber = createFiberFromElement(SINGLE_NUMBER_ELEMENT);
+    const child_fiber = beginWork(root_fiber);
+
+    expect(child_fiber?.type).toBe('p');
+    expect(root_fiber.pendingProps).not.toBeNull();
+    expect(child_fiber?.pendingProps).not.toBeNull();
+    expect(child_fiber?.pendingProps).toEqual({ children: 0 });
 
     expect(child_fiber?.return).toBe(root_fiber);
     expect(root_fiber.child).toBe(child_fiber);

@@ -17,6 +17,23 @@ export const SINGLE_ELEMENT = {
   },
   ref: null,
 };
+export const SINGLE_NUMBER_ELEMENT = {
+  $$typeof: REACT_ELEMENT_TYPE,
+  type: 'div',
+  key: null,
+  props: {
+    children: {
+      $$typeof: REACT_ELEMENT_TYPE,
+      type: 'p',
+      key: null,
+      props: {
+        children: 0,
+      },
+      ref: null,
+    },
+  },
+  ref: null,
+};
 
 export const MULTIPLE_ELEMENTS = {
   $$typeof: REACT_ELEMENT_TYPE,
