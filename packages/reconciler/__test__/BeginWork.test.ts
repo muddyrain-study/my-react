@@ -1,5 +1,6 @@
 import { beginWork } from '../BeginWork';
 import { createFiberFromElement } from '../Fiber';
+import { HostComponent, HostText } from '../ReactInternalTypes';
 import { MULTIPLE_ELEMENTS, SINGLE_ELEMENT, SINGLE_NUMBER_ELEMENT } from './data';
 
 describe('BeginWork 测试', () => {
@@ -36,7 +37,7 @@ describe('BeginWork 测试', () => {
     expect(child_fiber?.type).toBe(null);
     expect(child_fiber?.return).toBe(root_fiber);
     expect(root_fiber.child).toBe(child_fiber);
-    expect(child_fiber?.sibling?.tag).toBe(5);
+    expect(child_fiber?.sibling?.tag).toBe(HostComponent);
     expect(child_fiber?.sibling?.type).toBe('span');
     expect(child_fiber?.sibling?.return).toEqual(root_fiber);
   });

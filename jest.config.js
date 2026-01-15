@@ -9,4 +9,7 @@ module.exports = {
   setupFilesAfterEnv: ['@testing-library/jest-dom'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
+  moduleNameMapper: {
+    '^packages/react/(.*)$': '<rootDir>/packages/react/$1',
+  },
 };
