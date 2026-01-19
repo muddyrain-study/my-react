@@ -23,7 +23,8 @@ describe('FiberReconciler', () => {
     expect(hostRootFiber.stateNode?.containerInfo.childNodes.length).toBe(1);
   });
 
-  test('测试函数组件 State Hook 的创建', () => {
+  test('测试函数组件 State Hook 的创建', async () => {
+    jest.useRealTimers();
     const root_dom = document.createElement('div');
     const hostRootFiber = createContainer(root_dom);
     updateContainer(
@@ -36,5 +37,6 @@ describe('FiberReconciler', () => {
     expect(hostRootFiber.child?.child?.tag).toBe(FunctionComponent);
     expect(hostRootFiber.child?.child?.memoizedState).not.toBeNull();
     expect(hostRootFiber.child?.child?.child?.pendingProps?.children).toBe(0);
+    await new Promise((resolve) => setTimeout(resolve, 1100));
   });
 });

@@ -1,4 +1,5 @@
 import type { Fiber } from './ReactInternalTypes';
+import { updateOnFiber } from './WorkLoop';
 
 export type Hook = {
   memoizedState: any;
@@ -6,8 +7,19 @@ export type Hook = {
 
 // 当前正在渲染的fiber
 let currentlyRenderingFiber: Fiber | null = null;
-// 改变状态值的方法
-function setState() {}
+/**
+ * 更新組件状态值
+ * 1. 更改状态值
+ * 2. 触发重新渲染
+ * @param newState 新的状态值
+ */
+function setState(newState: any) {
+  const hook = currentlyRenderingFiber?.memoizedState as Hook;
+  hook.memoizedState = newState;
+  if (currentlyRenderingFiber) {
+    updateOnFiber(currentlyRenderingFiber);
+  }
+}
 /**
  * 创建一个 状态管理的 Hook
  * 1. 创建一个hook
