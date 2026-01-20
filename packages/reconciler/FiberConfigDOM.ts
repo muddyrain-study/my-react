@@ -21,7 +21,12 @@ export function createInstance(type: string) {
 export function appendChild(parent: Instance, child: Instance) {
   parent.appendChild(child);
 }
-
+/**
+ * 移除DOM节点
+ */
+export function removeChild(parent: Instance, child: Instance) {
+  parent.removeChild(child);
+}
 /**
  * 设置属性
  */
