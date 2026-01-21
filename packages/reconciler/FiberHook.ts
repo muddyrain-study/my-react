@@ -3,10 +3,13 @@ import { updateOnFiber } from './WorkLoop';
 
 export type Hook = {
   memoizedState: any;
+  next: Hook | null;
 };
 
 // 当前正在渲染的fiber
 let currentlyRenderingFiber: Fiber | null = null;
+// 当前工作的hook
+let workInProgressHook: Hook | null = null;
 /**
  * 更新組件状态值
  * 1. 更改状态值
@@ -20,6 +23,28 @@ function setState(newState: any) {
     updateOnFiber(currentlyRenderingFiber);
   }
 }
+
+/**
+ * mount 阶段创建 hook 对象
+ * @param initialState 初始状态值
+ * @returns 创建的 hook 对象
+ */
+function mountWorkInProgressHook(initialState: any): Hook {
+  const hook: Hook = {
+    memoizedState: initialState,
+    next: null,
+  };
+  if (currentlyRenderingFiber) {
+    if (workInProgressHook === null) {
+      currentlyRenderingFiber.memoizedState = hook;
+    } else {
+      workInProgressHook.next = hook;
+    }
+    workInProgressHook = hook;
+  }
+  return hook;
+}
+
 /**
  * 首次构建时状态管理的hook
  * 1. 创建一个hook
@@ -29,13 +54,7 @@ function setState(newState: any) {
  * @returns [state, setState]
  */
 export function mountState(initialState: any) {
-  const hook: Hook = {
-    memoizedState: initialState,
-  };
-  if (currentlyRenderingFiber) {
-    currentlyRenderingFiber.memoizedState = hook;
-  }
-
+  const hook = mountWorkInProgressHook(initialState);
   return [hook.memoizedState, setState];
 }
 /**
