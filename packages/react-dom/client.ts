@@ -1,5 +1,4 @@
 import type { ReactElement } from 'shared/ReactElementType';
-import { useState } from '../reconciler/FiberHook';
 import { createContainer, updateContainer } from '../reconciler/FiberReconciler';
 import type { Fiber } from '../reconciler/ReactInternalTypes';
 
@@ -26,4 +25,4 @@ function createRoot(container: HTMLElement) {
   return ReactDomRoot(hostRootFiber);
 }
 
-export { createRoot, useState };
+export { createRoot };

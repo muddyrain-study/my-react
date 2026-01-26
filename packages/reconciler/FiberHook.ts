@@ -1,3 +1,4 @@
+import { ReactSharedInternals } from '../react';
 import type { Fiber } from './ReactInternalTypes';
 import { updateOnFiber } from './WorkLoop';
 
@@ -86,9 +87,6 @@ export function updateState() {
   return [hook.memoizedState, hook.dispatch];
 }
 
-// 1. 导出一个变量
-// 2. 根据不同情况设置不同的值
-export let useState: typeof mountState | typeof updateState;
 /**
  * 渲染函数组件，考虑hooks, 并返回组件的返回值
  * 1. 设置当前正在渲染的fiber
@@ -101,11 +99,12 @@ export function renderWithHooks(workInProgress: Fiber, Component: any) {
   currentlyRenderingFiber = workInProgress;
   // 根据不同情况设置不同的useState实现
   if (currentlyRenderingFiber.memoizedState === null) {
-    useState = mountState;
+    ReactSharedInternals.H = mountState;
   } else {
-    useState = updateState;
+    ReactSharedInternals.H = updateState;
   }
   const result = Component();
   workInProgressHook = null;
+  console.log(ReactSharedInternals);
   return result;
 }
