@@ -1,5 +1,10 @@
-import type { Instance } from './FiberConfigDOM';
-import { appendChild, createInstance, createTextInstance, setInitialProps } from './FiberConfigDOM';
+import type { Instance } from '../react-dom-binding/FiberConfigDOM';
+import {
+  appendChild,
+  createInstance,
+  createTextInstance,
+  setInitialProps,
+} from '../react-dom-binding/FiberConfigDOM';
 import type { Fiber } from './ReactInternalTypes';
 import { FunctionComponent, HostComponent, HostText } from './ReactInternalTypes';
 
@@ -31,7 +36,7 @@ export const completeWork = (fiber: Fiber) => {
       break;
     case HostComponent: {
       // 1. 创建真实DOM节点
-      const instance = createInstance(fiber.type);
+      const instance = createInstance(fiber.type, fiber);
       // 关联DOM节点
       appendAllChild(instance, fiber.child);
       // 设置属性

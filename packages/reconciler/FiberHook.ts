@@ -37,14 +37,12 @@ function mountWorkInProgressHook(initialState: any): Hook {
     next: null,
     dispatch: null,
   };
-  if (currentlyRenderingFiber) {
-    if (workInProgressHook === null) {
-      currentlyRenderingFiber.memoizedState = hook;
-    } else {
-      workInProgressHook.next = hook;
-    }
-    workInProgressHook = hook;
+  if (workInProgressHook === null) {
+    currentlyRenderingFiber!.memoizedState = hook;
+  } else {
+    workInProgressHook!.next = hook;
   }
+  workInProgressHook = hook;
   return hook;
 }
 

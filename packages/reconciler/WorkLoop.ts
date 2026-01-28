@@ -1,6 +1,6 @@
+import { appendChild, removeChild } from '../react-dom-binding/FiberConfigDOM';
 import { beginWork } from './BeginWork';
 import { completeWork } from './CompleteWork';
-import { appendChild, removeChild } from './FiberConfigDOM';
 import type { Fiber } from './ReactInternalTypes';
 
 // 当前正在处理的 Fiber 节点
@@ -15,7 +15,7 @@ function completeUnitOfWork(fiber: Fiber) {
   do {
     completeWork(completedWork);
     // 如果有兄弟节点，继续遍历兄弟节点
-    if (fiber.sibling) {
+    if (completedWork.sibling) {
       workInProgress = completedWork.sibling;
       return;
     }
@@ -68,8 +68,8 @@ function getRootForUpdateFiber(fiber: Fiber): Fiber {
  */
 export function updateOnFiber(fiber: Fiber) {
   const hostRootFiber = getRootForUpdateFiber(fiber);
-  removeChild(hostRootFiber.stateNode.containerInfo, hostRootFiber.child!.stateNode);
+  removeChild(hostRootFiber.stateNode.containerInfo, hostRootFiber.child?.stateNode);
   workLoop(fiber);
-  // 向上的工作
-  appendChild(hostRootFiber.stateNode.containerInfo, hostRootFiber.child!.stateNode);
+
+  appendChild(hostRootFiber.stateNode.containerInfo, hostRootFiber.child?.stateNode);
 }
