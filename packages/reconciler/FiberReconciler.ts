@@ -2,6 +2,7 @@ import {
   accumulateSinglePhaseListeners,
   processEventQueuInOrder,
 } from 'packages/react-dom-binding/DOMPluginEventSystem';
+import { createSyntheticEvent } from 'packages/react-dom-binding/SyntheticeEvent';
 import type { ReactElement } from 'shared/ReactElementType';
 import { appendChild } from '../react-dom-binding/FiberConfigDOM';
 import { internalInstanceKey } from '../react-dom-binding/ReactDOMComponentTree';
@@ -21,9 +22,9 @@ export function createContainer(containerInfo: HTMLElement) {
   root.containerInfo.addEventListener('click', (e) => {
     // (e.target as any)[internalInstanceKey].pendingProps.onClick(e);
     const listeners = accumulateSinglePhaseListeners((e.target as any)[internalInstanceKey]);
-    console.log('listeners', listeners);
+    const SyntheticEvent = createSyntheticEvent(e);
+    processEventQueuInOrder(SyntheticEvent, listeners);
 
-    processEventQueuInOrder(e, listeners);
     console.log('root click');
   });
   return hostRootFiber;
