@@ -1,11 +1,6 @@
-import {
-  accumulateSinglePhaseListeners,
-  processEventQueuInOrder,
-} from 'packages/react-dom-binding/DOMPluginEventSystem';
-import { createSyntheticEvent } from 'packages/react-dom-binding/SyntheticeEvent';
+import { listenToAllSupportedEvents } from 'packages/react-dom-binding/DOMPluginEventSystem';
 import type { ReactElement } from 'shared/ReactElementType';
 import { appendChild } from '../react-dom-binding/FiberConfigDOM';
-import { internalInstanceKey } from '../react-dom-binding/ReactDOMComponentTree';
 import { createFiberFromElement, createHostRootFiber } from './Fiber';
 import { createFiberRoot } from './FiberRoot';
 import type { Fiber } from './ReactInternalTypes';
@@ -19,14 +14,7 @@ export function createContainer(containerInfo: HTMLElement) {
   const hostRootFiber = createHostRootFiber();
   hostRootFiber.stateNode = root;
   // 根元素添加事件监听，当捕获到事件触发时，找到event.target对应的fiber，并执行其onClick事件
-  root.containerInfo.addEventListener('click', (e) => {
-    // (e.target as any)[internalInstanceKey].pendingProps.onClick(e);
-    const listeners = accumulateSinglePhaseListeners((e.target as any)[internalInstanceKey]);
-    const SyntheticEvent = createSyntheticEvent(e);
-    processEventQueuInOrder(SyntheticEvent, listeners);
-
-    console.log('root click');
-  });
+  listenToAllSupportedEvents(root.containerInfo);
   return hostRootFiber;
 }
 

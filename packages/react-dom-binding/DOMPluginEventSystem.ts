@@ -2,11 +2,26 @@
  * dom 插件之事件系统
  */
 
+import { createSyntheticEvent } from 'packages/react-dom-binding/SyntheticEvent';
 import { type Fiber, HostComponent } from 'packages/reconciler/ReactInternalTypes';
+import { internalInstanceKey } from '../react-dom-binding/ReactDOMComponentTree';
 
-/**
- * 事件监听器
- * fiber (instance) 节点
+// 顶层事件之原生dom事件到React事件的映射
+const topLevelEventsToReactNames: Map<string, string> = new Map([
+  ['click', 'onClick'],
+  ['mousedown', 'onMouseDown'],
+  ['mouseup', 'onMouseUp'],
+  ['keydown', 'onKeyDown'],
+  ['keyup', 'onKeyUp'],
+  ['input', 'onInput'],
+  ['change', 'onChange'],
+  ['submit', 'onSubmit'],
+  ['focus', 'onFocus'],
+  ['blur', 'onBlur'],
+  ['scroll', 'onScroll'],
+  ['resize', 'onResize'],
+]);
+/*
  * listener 方法
  * currentTarget 当前事件目标
  */
@@ -40,15 +55,15 @@ export function createDispatchListener(
  * @param targetFiber fiber (instance)
  * @returns 方法的集合
  */
-export function accumulateSinglePhaseListeners(targetFiber: Fiber): Array<any> {
+export function accumulateSinglePhaseListeners(targetFiber: Fiber, reactName: string): Array<any> {
   let fiber: Fiber | null = targetFiber;
   const listeners: Array<any> = [];
   while (fiber) {
     const { pendingProps, tag } = fiber;
     if (tag === HostComponent) {
-      const { onClick } = pendingProps;
-      if (typeof onClick === 'function') {
-        listeners.push(createDispatchListener(fiber, onClick, fiber.stateNode));
+      const listener = pendingProps[reactName];
+      if (typeof listener === 'function') {
+        listeners.push(createDispatchListener(fiber, listener, fiber.stateNode));
       }
     }
     fiber = fiber.return;
@@ -77,4 +92,22 @@ export function processEventQueuInOrder(event: any, listeners: Array<any>) {
       return;
     }
   }
+}
+
+/**
+ * 监听所有支持的事件
+ * @params rootContainerElement 根元素
+ */
+export function listenToAllSupportedEvents(rootContainerElement: EventTarget) {
+  topLevelEventsToReactNames.forEach((reactName, nativeEvent) => {
+    rootContainerElement.addEventListener(nativeEvent, (e) => {
+      // (e.target as any)[internalInstanceKey].pendingProps.onClick(e);
+      const listeners = accumulateSinglePhaseListeners(
+        (e.target as any)[internalInstanceKey],
+        reactName
+      );
+      const SyntheticEvent = createSyntheticEvent(e);
+      processEventQueuInOrder(SyntheticEvent, listeners);
+    });
+  });
 }
